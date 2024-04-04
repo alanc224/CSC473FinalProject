@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for, request, jsonify
+from flask import Flask, redirect, render_template, url_for, request, jsonify, session
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user,UserMixin
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -81,6 +81,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
+    session['user_id'] = new_user.id
     return jsonify({
         'id': new_user.id,
         'username': new_user.username
