@@ -80,8 +80,8 @@ def logout():
 
 @app.route('/register',methods=['POST'])
 def register():
-    username = request.json["username"]
-    password = request.json["password"]
+    username = request["username"]
+    password = request["password"]
  
     user_exists = User.query.filter_by(username=username).first() is not None
  
