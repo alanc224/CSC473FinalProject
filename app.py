@@ -49,8 +49,8 @@ def hello_world():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.json["username"]
-    password = request.json["password"]
+    username = request.form["username"]
+    password = request.form["password"]
   
     user = User.query.filter_by(username=username).first()
   
@@ -80,8 +80,8 @@ def logout():
 
 @app.route('/register',methods=['POST'])
 def register():
-    username = request["username"]
-    password = request["password"]
+    username = request.form["username"]
+    password = request.form["password"]
  
     user_exists = User.query.filter_by(username=username).first() is not None
  
