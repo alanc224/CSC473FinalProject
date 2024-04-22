@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { } from 'react';
+import './App.css';
+
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+
+import HomePage from './pages/homepage';
+import LoginPage from './pages/loginpage';
+import RegisterPage from './pages/registerpage';
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <div className='vh-100 gradient-custom'>
+            <div className='container'>
+                <h1 className='page-header text-center'>React and Python Flask Login Register</h1>
+                <BrowserRouter>
+                <Routes>
+                    <Route path='/' element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />    
+                </Routes>
+                </BrowserRouter>
+            </div>
+        </div>
+    );
 }
 
-export default App
+export default App;
