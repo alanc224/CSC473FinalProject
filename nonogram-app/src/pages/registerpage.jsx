@@ -10,12 +10,12 @@ export default function RegisterPage(){
     const navigate = useNavigate();
      
     const registerUser = () => {
-        axios.post('http://127.0.0.1:5000/signup', {
+        axios.post('http://127.0.0.1:5000/register', {
             username: username,
             password: password
-        })
+        },{withCredentials: true})
         .then(function (response) {
-             console.log(response);
+            console.log(response);
             navigate("/");
         })
         .catch(function (error) {
