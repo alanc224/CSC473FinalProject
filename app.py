@@ -10,11 +10,9 @@ from flask_bcrypt import Bcrypt
 from models import db, User
 import stripe
 from flask_cors import CORS, cross_origin
-from models import User
 
 
 app = Flask(__name__)
-
 load_dotenv()
 stripe.api_key = os.getenv('STRIPE_API_SKEY')
 
@@ -30,6 +28,7 @@ login_manager.login_view = 'login'
 
 with app.app_context():
     db.create_all()
+
 
 @login_manager.user_loader
 def load_user(user_id):
