@@ -9,6 +9,8 @@ from wtforms.validators import InputRequired, Length,ValidationError
 from flask_bcrypt import Bcrypt
 from models import db, User
 import stripe
+from flask_cors import CORS, cross_origin
+from models import User
 
 
 app = Flask(__name__)
@@ -26,6 +28,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+with app.app_context():
+    db.create_all()
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -35,6 +40,9 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    win_count = db.Column(db.Integer, default=0)
+    owned_hints = db.Column(db.Integer, default=0)
+    owned_checks = db.Column(db.Integer, default=0)
 
 class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], 
