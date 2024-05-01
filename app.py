@@ -9,7 +9,6 @@ from wtforms.validators import InputRequired, Length,ValidationError
 from flask_bcrypt import Bcrypt
 from models import db, User
 import stripe
-from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__)
@@ -19,15 +18,13 @@ stripe.api_key = os.getenv('STRIPE_API_SKEY')
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_CREATE_DIR'] = False
 app.config['SECRET_KEY'] = 'SECRETKEY'
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-with app.app_context():
-    db.create_all()
 
 
 @login_manager.user_loader
@@ -42,6 +39,11 @@ class User(db.Model, UserMixin):
     win_count = db.Column(db.Integer, default=0)
     owned_hints = db.Column(db.Integer, default=0)
     owned_checks = db.Column(db.Integer, default=0)
+
+
+with app.app_context():
+    db.create_all()
+
 
 class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], 
