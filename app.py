@@ -51,29 +51,23 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 @app.route('/')
-def homepage():
+def home():
     return render_template('home.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login',methods=['GET','POST'])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
-  
-    user = User.query.filter_by(username=username).first()
-  
-    if user is None or not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Wrong username or password"}), 401
-      
-    session["user_id"] = user.id
-  
-    return jsonify({
-        "id": user.id,
-        "username": user.username
-    })
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user)
+                return redirect(url_for('home'))
+    return render_template('login.html', form=form)
 
 @app.route('/payment_page', methods=['GET', 'POST'])
 @login_required
-def payment_page():
+def dashboard():
     return render_template('payment_page.html')
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -82,27 +76,18 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/register',methods=['POST'])
+@app.route('/register',methods=['GET','POST'])
 def register():
-    username = request.form["username"]
-    password = request.form["password"]
- 
-    user_exists = User.query.filter_by(username=username).first() is not None
- 
-    if user_exists:
-        return jsonify({"error": "username already exists"}), 409
-     
-    hashed_password = bcrypt.generate_password_hash(password)
-    new_user = User(username=username, password=hashed_password)
-    db.session.add(new_user)
-    db.session.commit()
- 
-    session["user_id"] = new_user.id
- 
-    return jsonify({
-        "id": new_user.id,
-        "username": new_user.username
-    })
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(username=form.username.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+
+    return render_template('register.html',form=form)
 
 
 if __name__ == '__main__':
