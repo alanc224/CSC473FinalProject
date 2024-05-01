@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, url_for, request, jsonify, session
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user,UserMixin
 from flask_wtf import FlaskForm
@@ -6,9 +8,14 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length,ValidationError
 from flask_bcrypt import Bcrypt
 from models import db, User
+import stripe
 
 
 app = Flask(__name__)
+
+load_dotenv()
+stripe.api_key = os.getenv('STRIPE_API_SKEY')
+
 bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -36,7 +43,7 @@ class RegisterForm(FlaskForm):
     def validate_username(self, username):
         existing_user_username = User.query.filter_by(username=username.data).first()
         if existing_user_username:
-            raise ValidationError('That username is not valid. Please choose a different one.')
+            raise ValidationError('That username is not valid. Please choose a different username.')
 
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
@@ -44,8 +51,8 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 @app.route('/')
-def hello_world():
-    return "Hello, World!"
+def homepage():
+    return render_template('home.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -54,11 +61,8 @@ def login():
   
     user = User.query.filter_by(username=username).first()
   
-    if user is None:
-        return jsonify({"error": "Unauthorized Access"}), 401
-  
-    if not bcrypt.check_password_hash(user.password, password):
-        return jsonify({"error": "Unauthorized"}), 401
+    if user is None or not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"error": "Wrong username or password"}), 401
       
     session["user_id"] = user.id
   
@@ -67,10 +71,10 @@ def login():
         "username": user.username
     })
 
-@app.route('/dashboard', methods=['GET', 'POST'])
+@app.route('/payment_page', methods=['GET', 'POST'])
 @login_required
-def dashboard():
-    return render_template('dashboard.html')
+def payment_page():
+    return render_template('payment_page.html')
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
