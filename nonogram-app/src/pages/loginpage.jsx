@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
+import Navbar from "./NavBar";
  
 export default function LoginPage(){
  
@@ -41,6 +42,7 @@ export default function LoginPage(){
      
   return (
     <div>
+      <Navbar />
         <div className="container h-100">
           <div className="container-fluid h-custom">
             <div className="row d-flex justify-content-center align-items-center h-100">
