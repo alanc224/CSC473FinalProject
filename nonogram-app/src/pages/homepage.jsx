@@ -1,12 +1,21 @@
 import React, { } from "react";
 import {Link} from 'react-router-dom';
 import Navbar from "./NavBar";
+import './homepage.css';
  
 export default function HomePage(){
  
   return (
-    <div>
+    <div className="homepage">
       <Navbar />
+      <h1 className="homepage__title">Welcome To Nonogram</h1>
+      <h2>How To Play</h2>
+      <div className="homepage__link-container">
+        <Link to='/game/5x5' className="homepage__link">5 x 5</Link> 
+        <Link to='/game/10x10' className="homepage__link">10 x 10</Link>
+        <Link to='/game/15x15' className="homepage__link">15 x 15</Link>
+        <Link to='/game/20x20' className="homepage__link">20 x 20</Link>
+      </div>
     </div>
   );
 }

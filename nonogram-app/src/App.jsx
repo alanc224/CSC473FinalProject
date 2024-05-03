@@ -7,6 +7,7 @@ import HomePage from './pages/homepage';
 import LoginPage from './pages/loginpage';
 import RegisterPage from './pages/registerpage';
 import Navbar from './pages/NavBar';
+import GamePage from './pages/gamepage';
 
 function App() {
     return (
@@ -17,7 +18,8 @@ function App() {
                     <Route path='/Navbar' element={<Navbar />} />
                     <Route path='/' element={<HomePage />} />
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} /> 
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/game/:size" element={<GamePage />} />  
                 </Routes>
                 </BrowserRouter>
             </div>

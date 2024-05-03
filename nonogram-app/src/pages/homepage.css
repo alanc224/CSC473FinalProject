@@ -1,0 +1,12 @@
+.homepage {
+    background-color: #FFD0D0;
+    height: 100vh;
+}
+
+.homepage__link {
+    color: rgb(0, 0, 0);
+}
+
+.homepage__link-container {
+    display: grid;
+}

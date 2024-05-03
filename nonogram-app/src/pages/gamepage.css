@@ -1,0 +1,18 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3); /* Adjust as needed */
+  }
+  
+  .grid-row {
+    display: flex;
+  }
+  
+  .grid-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+    border: 1px solid #ccc; /* Adjust as needed */
+  }
+  
