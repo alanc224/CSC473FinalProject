@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
+import Navbar from "./NavBar";
  
 export default function RegisterPage(){
  
@@ -10,6 +11,13 @@ export default function RegisterPage(){
     const navigate = useNavigate();
      
     const registerUser = () => {
+      if(username.length === 0){
+        alert("username has left Blank!");
+      }
+      else if(password.length === 0){
+        alert("password has left Blank!");
+      }
+      else{
         axios.post('http://127.0.0.1:5000/register', {
             username: username,
             password: password
@@ -24,6 +32,7 @@ export default function RegisterPage(){
                 alert("Invalid credentials");
             }
         });
+      }
     };
      
     let imgs = [

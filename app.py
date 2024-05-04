@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, url_for, request, jsonify, session
+from flask import Flask, redirect, render_template, url_for, request, jsonify, session, Response
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user,UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -9,11 +9,14 @@ from wtforms.validators import InputRequired, Length,ValidationError
 from flask_bcrypt import Bcrypt
 from models import db, User
 import stripe
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 load_dotenv()
 stripe.api_key = os.getenv('STRIPE_API_SKEY')
+
+CORS(app)
 
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -128,25 +131,29 @@ def login():
     validation = L_validation(username, password)
 
     if validation is not None:
+        print(validation)
         return jsonify(validation), 400
 
-
+    user = User.query.filter_by(username=username).first()
     try:
-        user = User.query.filter_by(username).first()
+        print(user)
         if user:
             if bcrypt.check_password_hash(user.password, password):
                 login_user(user)
                 return jsonify({'message': 'Login successful'}), 200
             
             else:
+                print("Invalid username or password.")
                 error = {'message': 'Invalid username or password.'}
                 return jsonify(error), 400
             
         else:
+            print("At exception....why")
             error = {'message': 'Invalid username or password.'}
             return jsonify(error), 400
         
     except Exception as e:
+        print(user)
         return jsonify({'message': 'Error has occured.'}), 500
 
 
@@ -162,18 +169,23 @@ def logout():
     return logout_user()
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['POST', 'OPTIONS'])
 def register():
+    print("Hello")
     username = request.json.get('username')
     password = request.json.get('password')
+    print(username)
 
     if R_validation(username,password) is None:
+        
         hashed_password = bcrypt.generate_password_hash(password)
-        new_user = User(username, hashed_password)
+        new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+        return jsonify({'message': 'Registration successful'}), 200
     
     else:
+        print("Im here")
         error = R_validation(username,password)
         return jsonify(error), 400
 
