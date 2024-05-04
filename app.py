@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, url_for, request, jsonify, session
+from flask import Flask, redirect, render_template, url_for, request, jsonify, session, Response
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user,UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -9,11 +9,14 @@ from wtforms.validators import InputRequired, Length,ValidationError
 from flask_bcrypt import Bcrypt
 from models import db, User
 import stripe
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 load_dotenv()
 stripe.api_key = os.getenv('STRIPE_API_SKEY')
+
+CORS(app)
 
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -55,11 +58,9 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
-        existing_user_username = User.query.filter_by(
-            username=username.data).first()
+        existing_user_username = User.query.filter_by(username=username.data).first()
         if existing_user_username:
-            raise ValidationError(
-                'Please choose a different username.')
+            raise ValidationError('Please choose a different username.')
 
 
 class LoginForm(FlaskForm):
@@ -72,21 +73,88 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
+def R_validation(username, password):
+    errors = {}  
+
+    if not username:
+        errors['username'] = 'Username is required.'
+    if not password:
+        errors['password'] = 'Password is required.'
+
+    if username and len(username) < 8:
+        errors['username'] = 'Username must be at least 8 characters long.'
+
+    if password and len(password) < 10:
+        errors['password'] = 'Password must be at least 10 characters long.'
+
+    existing_user_username = User.query.filter_by(username=username).first()
+    if existing_user_username:
+        errors['username'] = 'Username already exists.'
+    
+    if errors:
+        return errors
+    else:
+        return None
+
+def L_validation(username, password):
+    errors = {}  
+
+    if not username:
+        errors['username'] = 'Username is required.'
+    if not password:
+        errors['password'] = 'Password is required.'
+
+    existing_user = User.query.filter_by(username=username).first()
+    if not existing_user:
+        errors['username'] = 'Invalid username or password.'
+
+    else:
+        if existing_user and not bcrypt.check_password_hash(existing_user.password, password):
+           errors['username'] = 'Invalid username or password.' 
+    
+    if errors:
+        return errors
+    else:
+        return None
+    
+
 @app.route('/')
 def home():
     return render_template('home.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+    username = request.json.get('username')
+    password = request.json.get('password')
+
+    validation = L_validation(username, password)
+
+    if validation is not None:
+        print(validation)
+        return jsonify(validation), 400
+
+    user = User.query.filter_by(username=username).first()
+    try:
+        print(user)
         if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
+            if bcrypt.check_password_hash(user.password, password):
                 login_user(user)
-                return redirect(url_for('home'))
-    return render_template('login.html', form=form)
+                return jsonify({'message': 'Login successful'}), 200
+            
+            else:
+                print("Invalid username or password.")
+                error = {'message': 'Invalid username or password.'}
+                return jsonify(error), 400
+            
+        else:
+            print("At exception....why")
+            error = {'message': 'Invalid username or password.'}
+            return jsonify(error), 400
+        
+    except Exception as e:
+        print(user)
+        return jsonify({'message': 'Error has occured.'}), 500
 
 
 @app.route('/payment_page', methods=['GET', 'POST'])
@@ -98,22 +166,28 @@ def dashboard():
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    logout_user()
-    return redirect(url_for('login'))
+    return logout_user()
 
 
-@ app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST', 'OPTIONS'])
 def register():
-    form = RegisterForm()
+    print("Hello")
+    username = request.json.get('username')
+    password = request.json.get('password')
+    print(username)
 
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+    if R_validation(username,password) is None:
+        
+        hashed_password = bcrypt.generate_password_hash(password)
+        new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login'))
-
-    return render_template('register.html', form=form)
+        return jsonify({'message': 'Registration successful'}), 200
+    
+    else:
+        print("Im here")
+        error = R_validation(username,password)
+        return jsonify(error), 400
 
 
 if __name__ == "__main__":
