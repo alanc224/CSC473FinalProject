@@ -28,24 +28,37 @@ export default function GamePage() {
   console.log(numRows);
   console.log(numCols);
   const grid = Array.from({ length: numRows }, () => Array.from({ length: numCols }, () => ''));
+  const cluesRows = nonogramValues[0].clues_rows;
+  const cluesCols = nonogramValues[0].clues_cols;
 
 
   
   return (
-    <div className="gamepage">
+    <>
       <Navbar/>
-      <p>{params.size}</p>
-      <div className="grid-container">
-      {/* Map over each row of the grid */}
-      {grid.map((row, rowIndex) => (
-        <div key={rowIndex} className="grid-row">
-          {/* Map over each cell in the row */}
-          {row.map((cell, colIndex) => (
-            <div key={colIndex} className="grid-cell">{cell}</div>
+      <div className="gamepage">
+        <div className="clues-rows">
+          {cluesRows.map((row, rowIndex) => (
+          <div key={rowIndex}>
+            {/* Map over each clue in the row */}
+            {row.map((clue, clueIndex) => (
+            <span key={clueIndex}>{clue} </span>
+            ))}
+          </div>
           ))}
         </div>
-      ))}
-    </div>
-    </div>
+        <div className="grid-container">
+          {/* Map over each row of the grid */}
+          {grid.map((row, rowIndex) => (
+            <div key={rowIndex} className="grid-row">
+              {/* Map over each cell in the row */}
+              {row.map((cell, colIndex) => (
+                <div key={colIndex} className="grid-cell">{cell}</div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

@@ -1,18 +1,37 @@
+.gamepage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 3.5rem);
+    position: relative;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3); /* Adjust as needed */
-  }
+}
   
-  .grid-row {
+.grid-row {
     display: flex;
-  }
+}
   
-  .grid-cell {
+.grid-cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px; /* Adjust as needed */
-    height: 100px; /* Adjust as needed */
+    width: 80px; /* Adjust as needed */
+    height: 80px; /* Adjust as needed */
     border: 1px solid #ccc; /* Adjust as needed */
-  }
-  
+}
+
+.clues-rows {
+    text-align: right;
+    position: absolute;
+    left: 22rem; /* Position 100px to the left of the grid */
+    top: 50%; /* Adjust top position as needed */
+    transform: translateY(-50%); /* Center vertically */
+    font-size: 2rem;
+    line-height: 5rem;
+    word-spacing: 2rem;
+}
