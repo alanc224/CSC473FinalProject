@@ -1,18 +1,46 @@
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(3); /* Adjust as needed */
-  }
-  
-  .grid-row {
+.gamepage {
     display: flex;
-  }
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 3.5rem);
+    position: relative;
+}
+
+.grid-container {
+}
   
-  .grid-cell {
+.grid-row {
+    display: flex;
+    position: relative;
+}
+  
+.grid-cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px; /* Adjust as needed */
-    height: 100px; /* Adjust as needed */
+    width: 80px; /* Adjust as needed */
+    height: 80px; /* Adjust as needed */
     border: 1px solid #ccc; /* Adjust as needed */
-  }
-  
+}
+
+.clues-rows {
+    position: absolute;
+    top: 50%;
+    right: 98%;
+    font-size: 1.5rem;
+    letter-spacing: 1.8rem;
+    transform: translate(0%, -50%);
+}
+
+.clues-cols {
+    display: flex;
+    font-size: 1.5rem;
+    line-height: 2.8rem;
+}
+
+.clues-cols > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}

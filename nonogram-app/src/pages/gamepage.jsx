@@ -28,24 +28,70 @@ export default function GamePage() {
   console.log(numRows);
   console.log(numCols);
   const grid = Array.from({ length: numRows }, () => Array.from({ length: numCols }, () => ''));
+  const cluesRows = nonogramValues[0].clues_rows;
+  const cluesCols = nonogramValues[0].clues_cols;
 
+  let scale;
+  switch (params.size) {
+    case "5x5":
+      scale = 100;
+      break;
+    case "10x10":
+      scale = 60;
+      break;
+    case "15x15":
+      scale = 30;
+      break;
+    case "20x20":
+      scale = 20;
+      break;
+  }
 
+  let spacing;
+  switch (params.size) {
+    case "5x5":
+      spacing = "4.2rem";
+      break;
+    case "10x10":
+      spacing = "4.3rem";
+      break;
+    case "15x15":
+      spacing = "4.4rem";
+      break;
+    case "20x20":
+      spacing = "4.5rem";
+      break;
+  }
   
   return (
-    <div className="gamepage">
+    <>
       <Navbar/>
-      <p>{params.size}</p>
-      <div className="grid-container">
-      {/* Map over each row of the grid */}
-      {grid.map((row, rowIndex) => (
-        <div key={rowIndex} className="grid-row">
-          {/* Map over each cell in the row */}
-          {row.map((cell, colIndex) => (
-            <div key={colIndex} className="grid-cell">{cell}</div>
+      <div className="gamepage" style={{ transform: `scale(${scale}%)` }}>
+        <div className="clues-cols" style={{ gap: spacing }}>
+          {/* Map over each column of the clues */}
+          {cluesCols.map((column, colIndex) => (
+            <div key={colIndex} className="clues-column">
+              {/* Map over each row in the column */}
+              {column.map((clue, rowIndex) => (
+                <span key={rowIndex}>{clue} </span>
+              ))}
+            </div>
           ))}
         </div>
-      ))}
-    </div>
-    </div>
+
+        <div className="grid-container">
+          {/* Map over each row of the grid */}
+          {grid.map((row, rowIndex) => (
+            <div key={rowIndex} className="grid-row">
+              <div className="clues-rows">{cluesRows[rowIndex]}</div>
+              {/* Map over each cell in the row */}
+              {row.map((cell, colIndex) => (
+                <div key={colIndex} className="grid-cell">{cell}</div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
