@@ -3,11 +3,12 @@ import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import Navbar from "./NavBar";
 import './registerpage.css';
- 
+
 export default function RegisterPage(){
  
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
    
     const navigate = useNavigate();
      
@@ -22,7 +23,9 @@ export default function RegisterPage(){
         axios.post('http://127.0.0.1:5000/register', {
             username: username,
             password: password
-        },{withCredentials: true})
+        },{withCredentials: true, headers: {
+          'Content-Type': 'application/json'
+        }})
         .then(function (response) {
             console.log(response);
             navigate("/");

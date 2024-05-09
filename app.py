@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, url_for, request, jsonify, session, Response
+from flask import Flask, make_response, redirect, render_template, url_for, request, jsonify, session, Response
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user,UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -13,10 +13,18 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
+
+@app.after_request
+def after_request(response): # Have to do this twice....
+    response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173')
+    response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
 load_dotenv()
 stripe.api_key = os.getenv('STRIPE_API_SKEY')
-
-CORS(app)
 
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -125,6 +133,7 @@ def home():
 
 @app.route('/login', methods=['POST'])
 def login():
+    
     username = request.json.get('username')
     password = request.json.get('password')
 
@@ -136,24 +145,20 @@ def login():
 
     user = User.query.filter_by(username=username).first()
     try:
-        print(user)
         if user:
             if bcrypt.check_password_hash(user.password, password):
                 login_user(user)
                 return jsonify({'message': 'Login successful'}), 200
             
             else:
-                print("Invalid username or password.")
                 error = {'message': 'Invalid username or password.'}
                 return jsonify(error), 400
             
         else:
-            print("At exception....why")
             error = {'message': 'Invalid username or password.'}
             return jsonify(error), 400
         
     except Exception as e:
-        print(user)
         return jsonify({'message': 'Error has occured.'}), 500
 
 
@@ -171,23 +176,30 @@ def logout():
 
 @app.route('/register', methods=['POST', 'OPTIONS'])
 def register():
-    print("Hello")
-    username = request.json.get('username')
-    password = request.json.get('password')
-    print(username)
-
-    if R_validation(username,password) is None:
+    if request.method == 'OPTIONS': # Wont work without this and the function doing the same above...
+        response = jsonify({'message': 'request successful'})
+        response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        return response
         
-        hashed_password = bcrypt.generate_password_hash(password)
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        return jsonify({'message': 'Registration successful'}), 200
-    
-    else:
-        print("Im here")
-        error = R_validation(username,password)
-        return jsonify(error), 400
+    elif request.method == 'POST':
+        username = request.json.get('username')
+        password = request.json.get('password')
+        print(R_validation(username,password))
+
+        if R_validation(username,password) is None:
+            
+            hashed_password = bcrypt.generate_password_hash(password)
+            new_user = User(username=username, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            response = jsonify({'message': 'Registration successful'})
+            return response
+        
+        else:
+            error = R_validation(username,password)
+            return jsonify(error), 400
 
 
 if __name__ == "__main__":
