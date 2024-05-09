@@ -8,12 +8,11 @@
 }
 
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(3); /* Adjust as needed */
 }
   
 .grid-row {
     display: flex;
+    position: relative;
 }
   
 .grid-cell {
@@ -26,12 +25,22 @@
 }
 
 .clues-rows {
-    text-align: right;
     position: absolute;
-    left: 22rem; /* Position 100px to the left of the grid */
-    top: 50%; /* Adjust top position as needed */
-    transform: translateY(-50%); /* Center vertically */
-    font-size: 2rem;
-    line-height: 5rem;
-    word-spacing: 2rem;
+    top: 50%;
+    right: 98%;
+    font-size: 1.5rem;
+    letter-spacing: 1.8rem;
+    transform: translate(0%, -50%);
+}
+
+.clues-cols {
+    display: flex;
+    font-size: 1.5rem;
+    line-height: 2.8rem;
+}
+
+.clues-cols > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
