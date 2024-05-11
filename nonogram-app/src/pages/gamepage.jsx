@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./NavBar";
 import './gamepage.css';
 import { useParams } from "react-router-dom";
@@ -25,11 +25,23 @@ export default function GamePage() {
 
   const numRows = parseInt(params.size.split("x")[0]);
   const numCols = parseInt(params.size.split("x")[1]);
-  console.log(numRows);
-  console.log(numCols);
-  const grid = Array.from({ length: numRows }, () => Array.from({ length: numCols }, () => ''));
   const cluesRows = nonogramValues[0].clues_rows;
   const cluesCols = nonogramValues[0].clues_cols;
+
+  const [board, setBoard] = useState(Array.from({ length: numRows }, () => Array.from({ length: numCols }, () => '0')));
+
+  const boardUpdate = (rowIndex, colIndex) => {
+    let tempboard = [...board]
+
+    if (board[rowIndex][colIndex] === '0') {
+      tempboard[rowIndex][colIndex] = '1';
+    } else if (board[rowIndex][colIndex] === '1') {
+      tempboard[rowIndex][colIndex] = 'x';
+    } else if (board[rowIndex][colIndex] === 'x') {
+      tempboard[rowIndex][colIndex] = '0';
+    }
+    setBoard(tempboard)
+  }
 
   let scale;
   switch (params.size) {
@@ -40,7 +52,7 @@ export default function GamePage() {
       scale = 60;
       break;
     case "15x15":
-      scale = 30;
+      scale = 40;
       break;
     case "20x20":
       scale = 20;
@@ -81,12 +93,12 @@ export default function GamePage() {
 
         <div className="grid-container">
           {/* Map over each row of the grid */}
-          {grid.map((row, rowIndex) => (
+          {board.map((row, rowIndex) => (
             <div key={rowIndex} className="grid-row">
               <div className="clues-rows">{cluesRows[rowIndex]}</div>
               {/* Map over each cell in the row */}
               {row.map((cell, colIndex) => (
-                <div key={colIndex} className="grid-cell">{cell}</div>
+                <div key={colIndex} className="grid-cell" onClick={() => boardUpdate(rowIndex, colIndex)}>{cell}</div>
               ))}
             </div>
           ))}
