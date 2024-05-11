@@ -43,7 +43,7 @@ export default function GamePage() {
       scale = 30;
       break;
     case "20x20":
-      scale = 20;
+      scale = 40;
       break;
   }
 
