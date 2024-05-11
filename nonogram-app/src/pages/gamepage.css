@@ -21,7 +21,7 @@
     align-items: center;
     width: 80px; /* Adjust as needed */
     height: 80px; /* Adjust as needed */
-    border: 1px solid #ccc; /* Adjust as needed */
+    border: 2px solid black; /* Adjust as needed */
 }
 
 .clues-rows {
