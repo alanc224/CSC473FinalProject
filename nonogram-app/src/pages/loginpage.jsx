@@ -43,6 +43,8 @@ export default function LoginPage(){
     }
      
     return (
+      <>
+      <Navbar/>
       <div className="loginpage">
         <div className="login-form-container">
           <form>
@@ -76,5 +78,6 @@ export default function LoginPage(){
           </form>
         </div>
       </div>
+      </>
     );    
 }

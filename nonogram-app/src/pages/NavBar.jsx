@@ -2,6 +2,7 @@ import React, { useContext  } from "react";
 import {Link} from 'react-router-dom';
 import LoginPage from "./loginpage";
 import UserContext from '../userlogged';
+import Logout from './logout';
 
 
 const Navbar = () => {
@@ -22,7 +23,8 @@ const Navbar = () => {
       {isLoggedIn ? (
           <Link to="/logout" onClick={(event) => {
             event.preventDefault();
-            updateLoginStatus(false); // Call updateLoginStatus with false
+            updateLoginStatus(false);
+            this.props.handleLogout?.();
           }}>
             <a>Log-out</a>
           </Link>
