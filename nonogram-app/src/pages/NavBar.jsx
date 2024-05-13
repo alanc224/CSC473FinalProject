@@ -1,9 +1,11 @@
-import React, { } from "react";
+import React, { useContext  } from "react";
 import {Link} from 'react-router-dom';
 import LoginPage from "./loginpage";
+import UserContext from '../userlogged';
 
 
 const Navbar = () => {
+  const { isLoggedIn, updateLoginStatus } = useContext(UserContext);
   return (
     <nav>
       <div className="left">
@@ -17,9 +19,18 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="right">
-        <Link to="/login">
-          <a>Log-in</a>
-        </Link>
+      {isLoggedIn ? (
+          <Link to="/logout" onClick={(event) => {
+            event.preventDefault();
+            updateLoginStatus(false); // Call updateLoginStatus with false
+          }}>
+            <a>Log-out</a>
+          </Link>
+        ) : (
+          <Link to="/login">
+            <a>Log-in</a>
+          </Link>
+        )}
       </div>
       
       <style jsx>{`

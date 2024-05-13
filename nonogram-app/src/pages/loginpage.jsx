@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext  } from "react";
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import Navbar from "./NavBar";
 import './loginpage.css';
+import UserContext from '../userlogged';
  
 export default function LoginPage(){
  
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
-   
+    const [isLoading, setIsLoading] = useState(false);
+    const { updateLoginStatus } = useContext(UserContext);
     const navigate = useNavigate();
      
     const logInUser = () => {
@@ -25,10 +27,13 @@ export default function LoginPage(){
             })
             .then(function (response) {
                 console.log(response);
+                setIsLoading(false);
+                updateLoginStatus(true)
                 //console.log(response.data);
                 navigate("/");
             })
             .catch(function (error) {
+                setIsLoading(false);
                 console.log(error, 'error');
                 if (error.response.status === 401) {
                     alert("Invalid credentials");
@@ -39,7 +44,6 @@ export default function LoginPage(){
      
     return (
       <div className="loginpage">
-        <Navbar />
         <div className="login-form-container">
           <form>
             <div>
