@@ -166,8 +166,23 @@ def login():
 
 @app.route('/payment_page', methods=['GET', 'POST'])
 @login_required
-def dashboard():
-    return render_template('payment_page.html')
+def pay_for_hints():
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    'price': '{{pr_1}}',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url='/success.html',
+            cancel_url='/cancel.html',
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
 
 
 @app.route('/logout', methods=['GET', 'POST'])
