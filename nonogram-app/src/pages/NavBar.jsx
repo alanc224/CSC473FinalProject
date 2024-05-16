@@ -41,12 +41,12 @@ const Navbar = () => {
           justify-content: space-between;
           align-items: center;
           padding: 20px 20px;
-          background-color: #F2BED1;
+          background-color: #333;
           color: #fff;
           box-sizing: border-box;
         }
         a {
-          color: black;
+          color: white;
           text-decoration: none;
           font-size: 1.6rem;
         }

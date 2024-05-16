@@ -7,7 +7,6 @@
     align-items: center;
     height: calc(100vh - 4.1rem);
     position: relative;
-    background-color: #F9F5F6;
 }
 
 .grid-container {
@@ -39,7 +38,7 @@
 .clues-rows {
     position: absolute;
     top: 50%;
-    right: 98%;
+    right: 100%;
     font-size: 1.5rem;
     letter-spacing: 1.8rem;
     transform: translate(0%, -50%);
@@ -49,6 +48,7 @@
     display: flex;
     font-size: 1.5rem;
     line-height: 2.8rem;
+    text-align: center;
 }
 
 .clues-cols > div {
@@ -67,6 +67,9 @@
     font-family: "VT323", monospace;
     font-size: 1.4rem;
     padding: 1rem;
-    background-color: #F2BED1;
-    border: none;
+    background-color: transparent;
+    color: black;
+    border: 2px solid black;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
