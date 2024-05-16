@@ -2,15 +2,15 @@ import React, { } from "react";
 import {Link} from 'react-router-dom';
 import Navbar from "./NavBar";
 
-const Leaderboard = () => {
+const Store = () => {
 
     return (
         <>
         <Navbar />
-        <div className="Leaderboard">
+        <div className="store">
         </div>
         </>
     );
 }
 
-export default Leaderboard;
+export default Store;
