@@ -2,11 +2,83 @@
     background-color: #F9F5F6;
     height: 100vh;
 }
+.homepage__title {
+    text-align: center;
+    font-size: 50px;
+    margin-top: 100px;
+    font-weight: bold;
+}
 
-.homepage__link {
-    color: rgb(0, 0, 0);
+.center {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.center button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333; 
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.instructions {
+    text-align: center;
+    margin-top: 10px;
+    margin-right: 500px;
+    margin-left: 500px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.instructions li {
+    padding: 10px;
+}
+
+.instructions button {
+    margin-top: 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333; 
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.instructions button:hover {
+    color: white;
+}
+
+.homepage h2 {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
 }
 
 .homepage__link-container {
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 30px;
+    width: 400px; /* Adjust width as needed */
+    margin: 0 auto; /* Center the grid horizontally */
+    margin-top: 50px;
+    font-size: 30px;
+}
+
+.homepage__link {
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 10px;
+    border: 2px solid #000; /* Add a border */
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+}
+
+.homepage__link:hover {
+    color: white;
 }
