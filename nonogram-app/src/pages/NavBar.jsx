@@ -15,8 +15,8 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="middle">
-        <Link to="/leaderboard">
-          <a>Daily Leaderboard</a>
+        <Link to="/store">
+          <a>Store</a>
         </Link>
       </div>
       <div className="right">
@@ -46,8 +46,9 @@ const Navbar = () => {
           box-sizing: border-box;
         }
         a {
-          color: #fff;
+          color: white;
           text-decoration: none;
+          font-size: 1.8rem;
         }
         .left, .middle, .right {
           flex: 1;

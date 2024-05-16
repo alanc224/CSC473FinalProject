@@ -1,13 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 .gamepage {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 3.5rem);
+    height: calc(100vh - 4.1rem);
     position: relative;
 }
 
 .grid-container {
+    border: 0.5px solid rgb(97, 97, 97);
 }
   
 .grid-row {
@@ -21,13 +24,21 @@
     align-items: center;
     width: 80px; /* Adjust as needed */
     height: 80px; /* Adjust as needed */
-    border: 2px solid black; /* Adjust as needed */
+    border: 0.5px solid rgb(97, 97, 97); /* Adjust as needed */
+    cursor: pointer;
+    font-size: 2rem;
+    background-color: white;
+    user-select: none;
+}
+
+.grid-cell.active {
+    background-color: #FDCEDF;
 }
 
 .clues-rows {
     position: absolute;
     top: 50%;
-    right: 98%;
+    right: 100%;
     font-size: 1.5rem;
     letter-spacing: 1.8rem;
     transform: translate(0%, -50%);
@@ -37,10 +48,28 @@
     display: flex;
     font-size: 1.5rem;
     line-height: 2.8rem;
+    text-align: center;
 }
 
 .clues-cols > div {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+}
+
+.check-btn {
+    position: fixed;
+    bottom: 0%;
+    right: 0%;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    font-family: "VT323", monospace;
+    font-size: 1.4rem;
+    padding: 1rem;
+    background-color: transparent;
+    color: black;
+    border: 2px solid black;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
