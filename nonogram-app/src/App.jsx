@@ -4,7 +4,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import React, { createContext,useState} from 'react';
 
 import HomePage from './pages/homepage';
-import Leaderboard from './pages/leaderboard';
+import Store from './pages/store';
 import LoginPage from './pages/loginpage';
 import Logout from './pages/logout';
 import RegisterPage from './pages/registerpage';
@@ -31,6 +31,7 @@ function App() {
                 <Route path="/logout" element={<Logout updateLoginStatus={updateLoginStatus} />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/game/:size" element={<GamePage />} />
+                <Route path='/store' element={<Store />} />
               </Routes>
             </BrowserRouter>
           </div>
