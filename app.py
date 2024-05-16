@@ -25,13 +25,15 @@ def after_request(response): # Have to do this twice....
 
 load_dotenv()
 stripe.api_key = os.getenv('STRIPE_API_SKEY')
+app.secret_key = os.getenv('SKEY')
 
 bcrypt = Bcrypt(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql+psycopg2://postgres:CSC473@localhost:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_CREATE_DIR'] = False
 app.config['SECRET_KEY'] = 'SECRETKEY'
 db = SQLAlchemy(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -46,7 +48,7 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     win_count = db.Column(db.Integer, default=0)
     owned_hints = db.Column(db.Integer, default=0)
     owned_checks = db.Column(db.Integer, default=0)
@@ -140,7 +142,6 @@ def login():
     validation = L_validation(username, password)
 
     if validation is not None:
-        print(validation)
         return jsonify(validation), 400
 
     user = User.query.filter_by(username=username).first()
@@ -148,6 +149,7 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, password):
                 login_user(user)
+                session['logged_in'] = True
                 return jsonify({'message': 'Login successful'}), 200
             
             else:
@@ -164,14 +166,31 @@ def login():
 
 @app.route('/payment_page', methods=['GET', 'POST'])
 @login_required
-def dashboard():
-    return render_template('payment_page.html')
+def pay_for_hints():
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    'price': '{{pr_1}}',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url='/success.html',
+            cancel_url='/cancel.html',
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
 
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    return logout_user()
+    print("Im here")
+    logout_user()
+    return redirect(url_for('login'))
 
 
 @app.route('/register', methods=['POST', 'OPTIONS'])
@@ -186,11 +205,10 @@ def register():
     elif request.method == 'POST':
         username = request.json.get('username')
         password = request.json.get('password')
-        print(R_validation(username,password))
 
         if R_validation(username,password) is None:
             
-            hashed_password = bcrypt.generate_password_hash(password)
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
             new_user = User(username=username, password=hashed_password)
             db.session.add(new_user)
             db.session.commit()

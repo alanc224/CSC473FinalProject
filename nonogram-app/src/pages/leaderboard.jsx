@@ -5,8 +5,11 @@ import Navbar from "./NavBar";
 const Leaderboard = () => {
 
     return (
-        <div>
+        <>
+        <Navbar />
+        <div className="Leaderboard">
         </div>
+        </>
     );
 }
 

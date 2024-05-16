@@ -1,8 +1,3 @@
-.registerpage {
-  background-color: #FFC0CB; /* Pink background */
-  height: 100vh;
-}
-
 .register-form-container {
   max-width: 400px; /* Set maximum width for the register form */
   margin: 0 auto; /* Center the register form horizontally */
@@ -47,6 +42,11 @@
   color: white;
   font-size: 16px;
   cursor: pointer;
+}
+
+.registerpage form label {
+  font-size: 14px;
+  color: #666;
 }
 
 .registerpage form button:hover {
