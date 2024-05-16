@@ -1,12 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 .gamepage {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 3.5rem);
+    height: calc(100vh - 4.1rem);
     position: relative;
     background-color: #F9F5F6;
-    ;
 }
 
 .grid-container {
@@ -54,4 +55,18 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+}
+
+.check-btn {
+    position: fixed;
+    bottom: 0%;
+    right: 0%;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    font-family: "VT323", monospace;
+    font-size: 1.4rem;
+    padding: 1rem;
+    background-color: #F2BED1;
+    border: none;
 }

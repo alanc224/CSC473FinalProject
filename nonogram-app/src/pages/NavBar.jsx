@@ -35,6 +35,7 @@ const Navbar = () => {
         a {
           color: black;
           text-decoration: none;
+          font-size: 1.6rem;
         }
         .left, .middle, .right {
           flex: 1;
