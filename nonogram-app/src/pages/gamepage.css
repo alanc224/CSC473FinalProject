@@ -5,9 +5,11 @@
     align-items: center;
     height: calc(100vh - 3.5rem);
     position: relative;
+    background-color: #F9F5F6;
 }
 
 .grid-container {
+    border: 0.5px solid rgb(97, 97, 97);
 }
   
 .grid-row {
@@ -21,7 +23,15 @@
     align-items: center;
     width: 80px; /* Adjust as needed */
     height: 80px; /* Adjust as needed */
-    border: 2px solid black; /* Adjust as needed */
+    border: 0.5px solid rgb(97, 97, 97); /* Adjust as needed */
+    cursor: pointer;
+    font-size: 2rem;
+    background-color: white;
+    user-select: none;
+}
+
+.grid-cell.active {
+    background-color: #FDCEDF;
 }
 
 .clues-rows {
