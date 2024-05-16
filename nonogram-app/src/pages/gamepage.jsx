@@ -65,7 +65,7 @@ export default function GamePage() {
       scale = 40;
       break;
     case "20x20":
-      scale = 45;
+      scale = 35;
       break;
   }
 
@@ -78,10 +78,10 @@ export default function GamePage() {
       spacing = "4.3rem";
       break;
     case "15x15":
-      spacing = "4.4rem";
+      spacing = "4.45rem";
       break;
     case "20x20":
-      spacing = "4.5rem";
+      spacing = "4.3rem";
       break;
   }
   
