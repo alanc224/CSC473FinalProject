@@ -14,9 +14,30 @@ export default function GamePage() {
   const [cluesRows, setCluesRows] = useState(Object.values(nonogramPuzzle)[0].clues_rows)
   const [cluesCols, setCluesCols] = useState(Object.values(nonogramPuzzle)[0].clues_cols)
   const [board, setBoard] = useState(Array.from({ length: numRows }, () => Array.from({ length: numCols }, () => '0')));
+  const [nonogramAnswers, setNonogramAnswers] = useState(Object.values(nonogramPuzzle)[0].board)
 
   useEffect(() => {
-    console.log(board)
+    console.log(nonogramAnswers)
+  },[])
+
+  useEffect(() => {
+    for (let i = 0; i < board.length; i++) {
+      const row1 = board[i];
+      const row2 = nonogramAnswers[i];
+  
+      for (let j = 0; j < row1.length; j++) {
+        const cell1 = row1[j];
+        const cell2 = row2[j];
+  
+        if (cell1 === 'x' && cell2 !== 0) {
+          return;
+        } else if (parseInt(cell1) !== cell2) {
+          return;
+        }
+      }  
+    }
+
+    window.alert(`You Win! It's a ${Object.keys(nonogramPuzzle)[0]}.`)
   }, [board])
 
   const boardUpdate = (rowIndex, colIndex) => {
@@ -87,7 +108,7 @@ export default function GamePage() {
               <div className="clues-rows">{cluesRows[rowIndex]}</div>
               {/* Map over each cell in the row */}
               {row.map((cell, colIndex) => (
-                <div key={colIndex} className="grid-cell" onClick={() => boardUpdate(rowIndex, colIndex)}>{cell}</div>
+                <div key={colIndex} className={`grid-cell ${cell === '1' ? 'active' : ''}`} onClick={() => boardUpdate(rowIndex, colIndex)}>{cell === 'x' ? 'x' : ''}</div>
               ))}
             </div>
           ))}

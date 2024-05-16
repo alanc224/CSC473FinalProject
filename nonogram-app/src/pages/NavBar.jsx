@@ -28,12 +28,12 @@ const Navbar = () => {
           justify-content: space-between;
           align-items: center;
           padding: 20px 20px;
-          background-color: #333;
+          background-color: #F2BED1;
           color: #fff;
           box-sizing: border-box;
         }
         a {
-          color: #fff;
+          color: black;
           text-decoration: none;
         }
         .left, .middle, .right {
