@@ -53,6 +53,25 @@ export default function GamePage() {
     setBoard(tempboard)
   }
 
+  const boardCheck = () => {
+    let tempboard = [...board]
+    for (let i = 0; i < board.length; i++) {
+      const row1 = board[i];
+      const row2 = nonogramAnswers[i];
+  
+      for (let j = 0; j < row1.length; j++) {
+        const cell1 = row1[j];
+        const cell2 = row2[j];
+  
+        if ((cell1 === '1' && cell2 === 0) || (cell1 === 'x' && cell2 === 1)) {
+          tempboard[i][j] = 'w'
+        }
+      } 
+    }
+    setBoard(tempboard)
+    console.log(board)
+  }
+
   let scale;
   switch (params.size) {
     case "5x5":
@@ -114,7 +133,7 @@ export default function GamePage() {
           ))}
         </div>
       </div>
-      <button className="check-btn">Check</button>
+      <button className="check-btn" onClick={boardCheck}>Check</button>
     </>
   );
 }
