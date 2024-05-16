@@ -114,6 +114,7 @@ export default function GamePage() {
           ))}
         </div>
       </div>
+      <button className="check-btn">Check</button>
     </>
   );
 }
