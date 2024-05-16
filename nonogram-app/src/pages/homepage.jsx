@@ -12,8 +12,9 @@ export default function HomePage(){
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="homepage">
-      <Navbar />
       <div className="homepage__content">
         <h1 className="homepage__title">WELCOME TO GRIDDLE!</h1>
         <div className="h2p-button center"onClick={toggleInstructions} style={{ cursor: "pointer" }}>
@@ -42,5 +43,6 @@ export default function HomePage(){
         </div>
       </div>
     </div>
+    </>
   );
 }
