@@ -4,7 +4,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import React, { createContext,useState} from 'react';
 
 import HomePage from './pages/homepage';
-import Leaderboard from './pages/store';
+import Store from './pages/store';
 import LoginPage from './pages/loginpage';
 import Logout from './pages/logout';
 import RegisterPage from './pages/registerpage';

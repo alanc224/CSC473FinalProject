@@ -1,0 +1,23 @@
+.store h1 {
+    font-size: 70px;
+}
+
+.store-item h2 {
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+.purchase-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.purchase-button:hover {
+    background-color: gray;
+}
