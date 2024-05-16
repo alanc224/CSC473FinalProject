@@ -22,6 +22,7 @@
     width: 80px; /* Adjust as needed */
     height: 80px; /* Adjust as needed */
     border: 1px solid #ccc; /* Adjust as needed */
+    cursor: pointer;
 }
 
 .clues-rows {

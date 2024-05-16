@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./NavBar";
 import './gamepage.css';
 import { useParams } from "react-router-dom";
@@ -7,28 +7,17 @@ import nonogramData from '../nonogram.json';
 export default function GamePage() {
   const params = useParams()
   // Access data from imported JSON
-  const { nonogram } = nonogramData;
-
-  // console.log(nonogram[params.size]);
-  const myArray = nonogram[params.size];
-
-  // Function to get a random element from the array
-  const getRandomElement = () => {
-    const randomIndex = Math.floor(Math.random() * myArray.length);
-    return myArray[randomIndex];
-  };
-
-  // values of nonogram puzzle
-  const nonogramPuzzle = getRandomElement();
-  const nonogramValues = Object.values(nonogramPuzzle);
-  // console.log(nonogramValues[0].board);
-
-  const numRows = parseInt(params.size.split("x")[0]);
-  const numCols = parseInt(params.size.split("x")[1]);
-  const cluesRows = nonogramValues[0].clues_rows;
-  const cluesCols = nonogramValues[0].clues_cols;
-
+  const [nonograms, setNonograms] = useState(nonogramData['nonogram'][params.size])
+  const [nonogramPuzzle, setNonogramPuzzle] = useState(nonograms[Math.floor(Math.random() * nonograms.length)])
+  const [numRows] = useState(parseInt(params.size.split("x")[0]))
+  const [numCols] = useState(parseInt(params.size.split("x")[1]))
+  const [cluesRows, setCluesRows] = useState(Object.values(nonogramPuzzle)[0].clues_rows)
+  const [cluesCols, setCluesCols] = useState(Object.values(nonogramPuzzle)[0].clues_cols)
   const [board, setBoard] = useState(Array.from({ length: numRows }, () => Array.from({ length: numCols }, () => '0')));
+
+  useEffect(() => {
+    console.log(board)
+  }, [board])
 
   const boardUpdate = (rowIndex, colIndex) => {
     let tempboard = [...board]
