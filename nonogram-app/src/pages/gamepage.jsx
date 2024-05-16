@@ -29,8 +29,8 @@ export default function GamePage() {
         const cell1 = row1[j];
         const cell2 = row2[j];
   
-        if (cell1 === 'x' && cell2 !== 0) {
-          return;
+        if (cell1 === 'x' && cell2 === 0) {
+          continue;
         } else if (parseInt(cell1) !== cell2) {
           return;
         }

@@ -26,9 +26,9 @@
     height: 80px; /* Adjust as needed */
     border: 0.5px solid rgb(97, 97, 97); /* Adjust as needed */
     cursor: pointer;
-    font-size: 5rem;
-    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2rem;
     background-color: white;
+    user-select: none;
 }
 
 .grid-cell.active {
