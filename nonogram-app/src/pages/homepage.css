@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 .homepage__title {
     text-align: center;
     font-size: 50px;
     margin-top: 100px;
     font-weight: bold;
+    font-size: 5.0rem;
 }
 
 .center {
@@ -24,15 +27,22 @@
 .instructions {
     text-align: center;
     margin-top: 10px;
-    margin-right: 500px;
-    margin-left: 500px;
+    margin-right: 150px;
+    margin-left: 150px;
     border: 2px solid #000;
     border-radius: 10px;
+    font-size: 1.35rem;
     padding: 10px;
 }
 
 .instructions li {
     padding: 10px;
+}
+
+.h2p-button > button {
+    font-family: "VT323", monospace !important;
+    padding: 1rem;
+    font-size: 1.5rem;
 }
 
 .instructions button {
@@ -44,6 +54,9 @@
     color: white;
     font-size: 14px;
     cursor: pointer;
+    font-family: "VT323", monospace !important;
+    padding: 1rem;
+    font-size: 1.15rem;
 }
 
 .instructions button:hover {
@@ -53,7 +66,7 @@
 .homepage h2 {
     text-align: center;
     margin-top: 20px;
-    font-size: 20px;
+    font-size: 1.35rem;
 }
 
 .homepage__link-container {
@@ -73,6 +86,7 @@
     border: 2px solid #000; /* Add a border */
     border-radius: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+    font-size: 1.8rem;
 }
 
 .homepage__link:hover {
