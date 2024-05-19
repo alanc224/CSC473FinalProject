@@ -35,13 +35,13 @@ const PurchaseCheck = ({ item }) => {
         setPurchaseState('error');
       }
     };
-  
+  // Placeholders for now
     return (
-      <>
+      <> 
         <Navbar />
         <div>
-          <h2>Purchase Confirmation</h2>
-          <p>You are about to purchase a check for ${item === 'check' ? 1 : '1'}</p>
+          <h2>Purchase Confirmation</h2> 
+          <p>You are about to purchase a check for ${item === 'check' ? 1 : '1'}</p> 
           {purchaseState === 'processing' && <p>Processing purchase...</p>}
           {purchaseState === 'success' && <p>Purchase successful!</p>}
           {purchaseState === 'error' && <p className="error-message">{errorMessage}</p>}

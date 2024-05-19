@@ -35,7 +35,7 @@ const PurchaseHint = ({ item }) => {
         setPurchaseState('error');
       }
     };
-  
+    // Placeholders for now
     return (
       <>
         <Navbar />
