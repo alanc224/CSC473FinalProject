@@ -1,19 +1,31 @@
 import os
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 from dotenv import load_dotenv
 from flask import Flask, make_response, redirect, render_template, url_for, request, jsonify, session, Response
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user,UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, CSRFProtect
+from flask_wtf.csrf import generate_csrf
+from flask_jwt_extended import create_access_token, create_refresh_token, set_refresh_cookies
+from flask_jwt_extended import get_jwt
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended import set_access_cookies
+from flask_jwt_extended import unset_jwt_cookies
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length,ValidationError
 from flask_bcrypt import Bcrypt
 from models import db, User
-import stripe
-from flask_cors import CORS
-
+import stripe, logging
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+JWTManager(app)
 
 @app.after_request
 def after_request(response): # Have to do this twice....
@@ -26,6 +38,13 @@ def after_request(response): # Have to do this twice....
 load_dotenv()
 stripe.api_key = os.getenv('STRIPE_API_SKEY')
 app.secret_key = os.getenv('SKEY')
+# If true this will only allow the cookies that contain your JWTs to be sent
+# over https. In production, this should always be set to True
+app.config["JWT_COOKIE_SECURE"] = False
+app.config['JWT_TOKEN_LOCATION'] = ['headers', 'cookies']
+app.config["JWT_SECRET_KEY"] = app.secret_key
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config['JWT_REFRESH_COOKIE_PATH'] = '/auth/refresh'
 
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql+psycopg2://postgres:CSC473@localhost:5432/postgres'
@@ -34,11 +53,9 @@ app.config['SQLALCHEMY_CREATE_DIR'] = False
 app.config['SECRET_KEY'] = 'SECRETKEY'
 db = SQLAlchemy(app)
 
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -133,6 +150,20 @@ def home():
     return render_template('home.html')
 
 
+@app.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            set_access_cookies(response, access_token)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original response
+        return response
+
 @app.route('/login', methods=['POST'])
 def login():
     
@@ -150,8 +181,13 @@ def login():
             if bcrypt.check_password_hash(user.password, password):
                 login_user(user)
                 session['logged_in'] = True
-                return jsonify({'message': 'Login successful'}), 200
-            
+                response = jsonify({
+                    "msg": "login successful",
+                    "username": user.username, 
+                    "access_token": create_access_token(identity=username)
+                })
+                return response, 200
+                        
             else:
                 error = {'message': 'Invalid username or password.'}
                 return jsonify(error), 400
@@ -162,35 +198,100 @@ def login():
         
     except Exception as e:
         return jsonify({'message': 'Error has occured.'}), 500
+    
 
 
-@app.route('/payment_page', methods=['GET', 'POST'])
-@login_required
+
+@app.route('/purchaseItem=hints', methods=['GET', 'POST','OPTIONS'])
+@jwt_required()
+@cross_origin()
 def pay_for_hints():
+    if request.method == 'OPTIONS': # Wont work without this and the function doing the same above...
+        response = jsonify({'message': 'request successful'})
+        response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        return response
+    hints = os.getenv('hints')
     try:
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
-                    'price': '{{pr_1}}',
+                    
+                    'price': hints,
                     'quantity': 1,
                 },
             ],
             mode='payment',
-            success_url='/success.html',
-            cancel_url='/cancel.html',
+            success_url='http://localhost:5173/' + '?success=true',
+            cancel_url='http://localhost:5173/' + '?canceled=true',
         )
     except Exception as e:
         return str(e)
 
-    return redirect(checkout_session.url, code=303)
+    if checkout_session:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+        user.owned_hints += 1
+        db.session.commit()
+        return redirect(checkout_session.url, code=303)
 
+    else:
+        return redirect(checkout_session.url, code=500)
+    
+@app.route('/purchaseItem=checks', methods=['GET', 'POST','OPTIONS'])
+@jwt_required()
+@cross_origin()
+def pay_for_checks():
+    if request.method == 'OPTIONS': # Wont work without this and the function doing the same above...
+        response = jsonify({'message': 'request successful'})
+        response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        return response
+    checks = os.getenv('checks')
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    
+                    'price': checks,
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url='http://localhost:5173/' + '?success=true',
+            cancel_url='http://localhost:5173/' + '?canceled=true',
+        )
+    except Exception as e:
+        return str(e)
 
-@app.route('/logout', methods=['GET', 'POST'])
-@login_required
+    if checkout_session:
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+        user.owned_checks += 1
+        db.session.commit()
+        return redirect(checkout_session.url, code=303)
+
+    else:
+        return redirect(checkout_session.url, code=500)
+    
+
+@app.route('/logout', methods=['POST', 'OPTIONS'])
+@jwt_required()
+@cross_origin()
 def logout():
-    print("Im here")
+    if request.method == 'OPTIONS': # Wont work without this and the function doing the same above...
+        response = jsonify({'message': 'request successful'})
+        response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        return response
+    
     logout_user()
-    return redirect(url_for('login'))
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
 
 
 @app.route('/register', methods=['POST', 'OPTIONS'])
