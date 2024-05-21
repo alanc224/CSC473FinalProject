@@ -123,7 +123,7 @@ export default function GamePage() {
     const token = sessionStorage.getItem("token");
     let tempboard = [...board]
 
-    if (ownedChecks >= 2 && isLoggedIn === true){
+    if (ownedChecks >= 1 && isLoggedIn === true){
       for (let i = 0; i < board.length; i++) {
         const row1 = board[i];
         const row2 = nonogramAnswers[i];
@@ -137,12 +137,21 @@ export default function GamePage() {
           }
         } 
       }
+      if (tempboard === board){
+        window.alert(`No mistakes!`)
+      }
 
       setBoard(tempboard)
       console.log(board)
 
-      const newOwnedChecks = ownedChecks - 2;
-      setOwnedChecks(newOwnedChecks);
+      if (ownedChecks % 2 === 0){
+        const newOwnedChecks = ownedChecks - 2;
+        setOwnedHints(newOwnedChecks);
+      }
+      else{
+        const newOwnedChecks = ownedChecks - 1;
+        setOwnedHints(newOwnedChecks);
+      }
 
       try{
         const response = await axios.get('http://127.0.0.1:5000/user/UpdateChecks', {
@@ -164,7 +173,7 @@ export default function GamePage() {
       }
     };
 
-    if (ownedHints < 2 && isLoggedIn === true) {
+    if (ownedHints < 1 && isLoggedIn === true) {
       console.log("Not enough checks")
       // Need to display message
     }
@@ -183,7 +192,7 @@ export default function GamePage() {
   const boardHint = async () => {
     const token = sessionStorage.getItem("token");
     const possibleHints = [];
-    if (ownedHints >= 2 && isLoggedIn === true){
+    if (ownedHints >= 1 && isLoggedIn === true){
       for (let i = 0; i < nonogramAnswers.length; i++) {
         const row = nonogramAnswers[i];
         for (let j = 0; j < row.length; j++) {
@@ -197,8 +206,15 @@ export default function GamePage() {
       let tempboard = [...board]
       tempboard[hint[0]][hint[1]] = '1'
       setBoard(tempboard)
-      const newOwnedHints = ownedHints - 2;
-      setOwnedHints(newOwnedHints);
+
+      if (ownedHints % 2 === 0){
+        const newOwnedHints = ownedHints - 2;
+        setOwnedHints(newOwnedHints);
+      }
+      else{
+        const newOwnedHints = ownedHints - 1;
+        setOwnedHints(newOwnedHints);
+      }
 
       try{
         const response = await axios.get('http://127.0.0.1:5000/user/UpdateHints', {
@@ -220,7 +236,7 @@ export default function GamePage() {
       }
     };
 
-    if (ownedHints < 2 && isLoggedIn === true) {
+    if (ownedHints < 1 && isLoggedIn === true) {
       console.log("Not enough hints")
       // Need to display message
     }

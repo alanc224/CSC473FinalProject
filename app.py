@@ -346,14 +346,23 @@ def update_hints():
     if not user:
         return jsonify({'error': 'Unauthorized'}), 401
     
-    if user.owned_hints >= 2:
+    if user.owned_hints >= 1 and user.owned_hints % 2 == 0:
         user.owned_hints -= 2
         db.session.commit()
         hints = user.owned_hints
         print(hints)
         return jsonify(hints)
+    
     else:
-        return("Not enough hints!")
+        if user.owned_hints < 1:
+            return jsonify("Not enough hints!")
+        
+        else: 
+            user.owned_hints -= 1
+            db.session.commit()
+            hints = user.owned_hints
+            print(hints)
+            return jsonify(hints)
 
 @app.route('/user/checks', methods= ['GET'])
 @jwt_required()
@@ -378,7 +387,7 @@ def update_checks():
     if not user:
         return jsonify({'error': 'Unauthorized'}), 401
     
-    if user.owned_checks >= 2:
+    if user.owned_checks >= 1 and user.owned_checks % 2 == 0:
         user.owned_checks -= 2
         db.session.commit()
         checks = user.owned_checks
@@ -386,7 +395,15 @@ def update_checks():
         return jsonify(checks)
     
     else:
-        return jsonify("Not enough checks!")
+        if user.owned_checks < 1:
+            return jsonify("Not enough checks!")
+        
+        else: 
+            user.owned_checks -= 1
+            db.session.commit()
+            checks = user.owned_checks
+            print(checks)
+            return jsonify(checks)
 
 if __name__ == "__main__":
     app.run(debug=True)
