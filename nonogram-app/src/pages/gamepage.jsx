@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect} from "react";
 import Navbar from "./NavBar";
 import './gamepage.css';
 import axios from 'axios';
@@ -8,7 +8,6 @@ import UserContext from '../userlogged';
 
 export default function GamePage() {
   const params = useParams()
-  const { isLoggedIn, updateLoginStatus } = useContext(UserContext);
   const [nonograms, setNonograms] = useState(nonogramData['nonogram'][params.size])
   const [nonogramPuzzle, setNonogramPuzzle] = useState(nonograms[Math.floor(Math.random() * nonograms.length)])
   const [numRows] = useState(parseInt(params.size.split("x")[0]))
