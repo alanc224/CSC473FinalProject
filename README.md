@@ -25,14 +25,25 @@ We aim to create a user-friendly nonogram puzzle game web application. Based on 
 
 ## Nonogram Game Design
 
+- Created big JSON file to store all the nonogram puzzles
+- Formatted into objects of different sizes
+  - 5x5, 10x10, 15x15, 20x20
+- 2D arrays for the row clues, column clues, and answers 
+
+
 ## API Implementation
+
+- We utilized the Stripe API to handle payment in our application.
+- When users choose to purchase a check or a hint, the api will generate a unique one time use purchase link for the user to buy the digital good.
+- This allows us a hands off approach when dealing with user’s credit/debit card information.
+
 
 ## Demo
 
-## Additional Info
+https://griddle-csc-473-final-project.vercel.app/
 
 ## Contact
 <b>Team Null<b>
-- Zuhayer Alvi: [email] | [LinkedIn] | [Github]
-- Alan Concepcion: [email] | [LinkedIn] | [Github]
-- Daphne Tang: [email] | [LinkedIn] | [Github]
+- Zuhayer Alvi
+- Alan Concepcion
+- Daphne Tang
