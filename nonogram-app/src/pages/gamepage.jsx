@@ -137,6 +137,9 @@ export default function GamePage() {
           }
         } 
       }
+      if (tempboard === board){
+        window.alert(`No mistakes!`)
+      }
 
       setBoard(tempboard)
       console.log(board)
