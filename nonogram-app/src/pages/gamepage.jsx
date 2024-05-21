@@ -72,6 +72,27 @@ export default function GamePage() {
     console.log(board)
   }
 
+  // - go thro answers Array
+  // - for each 1 check if its on the board 
+  // - if not add to another Array
+  // - choose a random element from that array
+  const boardHint = () => {
+    const possibleHints = [];
+    for (let i = 0; i < nonogramAnswers.length; i++) {
+      const row = nonogramAnswers[i];
+      for (let j = 0; j < row.length; j++) {
+        const cell = row[j];
+        if (cell === 1 && board[i][j] !== '1') {
+          possibleHints.push([i, j]);
+        }
+      } 
+    }
+    const hint = possibleHints[Math.floor(Math.random() * possibleHints.length)]
+    let tempboard = [...board]
+    tempboard[hint[0]][hint[1]] = '1'
+    setBoard(tempboard)
+  }
+
   let scale;
   switch (params.size) {
     case "5x5":
@@ -124,16 +145,21 @@ export default function GamePage() {
           {/* Map over each row of the grid */}
           {board.map((row, rowIndex) => (
             <div key={rowIndex} className="grid-row">
-              <div className="clues-rows">{cluesRows[rowIndex]}</div>
+              {cluesRows[rowIndex].map((clue, clueIndex) => (
+                <span key={clueIndex}>{clue} </span>
+              ))}
               {/* Map over each cell in the row */}
               {row.map((cell, colIndex) => (
-                <div key={colIndex} className={`grid-cell ${cell === '1' ? 'active' : ''}`} onClick={() => boardUpdate(rowIndex, colIndex)}>{cell === 'x' ? 'x' : ''}</div>
+                <div key={colIndex} className={`grid-cell ${cell === '1' ? 'active' : ''} ${cell === 'w' ? 'wrong' : ''}`} onClick={() => boardUpdate(rowIndex, colIndex)}>{cell === 'x' ? 'x' : ''}</div>
               ))}
             </div>
           ))}
         </div>
       </div>
-      <button className="check-btn" onClick={boardCheck}>Check</button>
+      <div className="btn-container">
+        <button onClick={boardHint}>Hint</button>
+        <button onClick={boardCheck}>Check</button>
+      </div>
     </>
   );
 }
