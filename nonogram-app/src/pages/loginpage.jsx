@@ -14,6 +14,7 @@ export default function LoginPage(){
     const { updateLoginStatus } = useContext(UserContext);
     const navigate = useNavigate();
     const token = sessionStorage.getItem("token")
+    
 
     useEffect(() => {
       const token = sessionStorage.getItem("token");
