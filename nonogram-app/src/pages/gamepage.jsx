@@ -113,6 +113,8 @@ export default function GamePage() {
       tempboard[rowIndex][colIndex] = 'x';
     } else if (board[rowIndex][colIndex] === 'x') {
       tempboard[rowIndex][colIndex] = '0';
+    } else if (board[rowIndex][colIndex] === 'w') {
+      tempboard[rowIndex][colIndex] = '0';
     }
     setBoard(tempboard)
   }
