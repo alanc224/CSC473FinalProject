@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import login_user, LoginManager, login_required, logout_user, current_user,UserMixin
+from flask_login import login_user, LoginManager, login_required, logout_user, current_user, UserMixin
 from uuid import uuid4
 
 db = SQLAlchemy()

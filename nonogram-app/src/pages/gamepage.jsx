@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "./NavBar";
 import './gamepage.css';
 import { useParams } from "react-router-dom";
 import nonogramData from '../nonogram.json';
+import UserContext from '../userlogged';
 
 export default function GamePage() {
   const params = useParams()
-  // Access data from imported JSON
+  const { isLoggedIn, updateLoginStatus } = useContext(UserContext);
   const [nonograms, setNonograms] = useState(nonogramData['nonogram'][params.size])
   const [nonogramPuzzle, setNonogramPuzzle] = useState(nonograms[Math.floor(Math.random() * nonograms.length)])
   const [numRows] = useState(parseInt(params.size.split("x")[0]))

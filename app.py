@@ -219,6 +219,5 @@ def register():
             error = R_validation(username,password)
             return jsonify(error), 400
 
-
 if __name__ == "__main__":
     app.run(debug=True)
