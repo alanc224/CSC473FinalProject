@@ -1,4 +1,4 @@
-import React, { useContext  } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {Link} from 'react-router-dom';
 import LoginPage from "./loginpage";
 import UserContext from '../userlogged';
@@ -6,7 +6,15 @@ import Logout from './logout';
 
 
 const Navbar = () => {
-  const { isLoggedIn, updateLoginStatus } = useContext(UserContext);
+  const { token, setToken} = useContext(UserContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const username = sessionStorage.getItem("username");
+    setIsLoggedIn(!!token && !!username);
+  }, []); 
+  
   return (
     <nav>
       <div className="left">
@@ -21,13 +29,7 @@ const Navbar = () => {
       </div>
       <div className="right">
       {isLoggedIn ? (
-          <Link to="/logout" onClick={(event) => {
-            event.preventDefault();
-            updateLoginStatus(false);
-            this.props.handleLogout?.();
-          }}>
-            <a>Log-out</a>
-          </Link>
+          <Logout />
         ) : (
           <Link to="/login">
             <a>Log-in</a>
