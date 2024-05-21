@@ -324,5 +324,69 @@ def paid_checks():
     db.session.commit()
     return jsonify({'message': 'Hints incremented successfully'}), 200
 
+@app.route('/user/hints', methods= ['GET'])
+@jwt_required()
+@cross_origin()
+def get_hints():
+    
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    hints = user.owned_hints
+    return jsonify(hints)
+
+@app.route('/user/UpdateHints', methods= ['GET','POST'])
+@jwt_required()
+@cross_origin()
+def update_hints():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    if user.owned_hints >= 2:
+        user.owned_hints -= 2
+        db.session.commit()
+        hints = user.owned_hints
+        print(hints)
+        return jsonify(hints)
+    else:
+        return("Not enough hints!")
+
+@app.route('/user/checks', methods= ['GET'])
+@jwt_required()
+@cross_origin()
+def get_checks():
+    
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    checks = user.owned_checks
+    print("Checks:", checks)
+    return jsonify(checks)
+
+@app.route('/user/UpdateChecks', methods= ['GET','POST'])
+@jwt_required()
+@cross_origin()
+def update_checks():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    if user.owned_checks >= 2:
+        user.owned_checks -= 2
+        db.session.commit()
+        checks = user.owned_checks
+        print(checks)
+        return jsonify(checks)
+    
+    else:
+        return jsonify("Not enough checks!")
+
 if __name__ == "__main__":
     app.run(debug=True)
