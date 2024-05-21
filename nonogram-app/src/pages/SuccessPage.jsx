@@ -4,7 +4,7 @@ import Navbar from "./NavBar";
 import axios from 'axios';
  
 function SuccessPage(){
-  const [secondsRemaining, setSecondsRemaining] = useState(5);
+  const [secondsRemaining, setSecondsRemaining] = useState(2);
   const id = sessionStorage.getItem('id');
   const token = sessionStorage.getItem('token');
 

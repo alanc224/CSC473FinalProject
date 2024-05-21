@@ -52,8 +52,16 @@ const PurchaseHint = ({ item }) => {
           {purchaseState === 'processing' && <p>Processing purchase...</p>}
           {purchaseState === 'success' && <p>Purchase link generated!</p>}
           {purchaseState === 'error' && <p className="error-message">{errorMessage}</p>}
-          <button disabled={purchaseState !== 'idle'} onClick={handlePurchase}>
-            {purchaseState === 'idle' ? 'Purchase Hint' : 'Processing...'}
+          <button
+            disabled={purchaseState !== 'idle'}
+            onClick={handlePurchase}
+            style={{
+              color: purchaseState === 'idle' ? 'black' : 'white', 
+              fontFamily: 'inherit',
+              opacity: 1, 
+            }}
+          >
+            {purchaseState === 'idle' ? 'Click here to Purchase a Hint' : 'Processing...'}
           </button>
         </div>
       </>
