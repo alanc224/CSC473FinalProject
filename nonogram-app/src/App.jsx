@@ -1,5 +1,4 @@
 import './App.css';
-
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import React, { createContext,useState} from 'react';
 
@@ -13,6 +12,8 @@ import GamePage from './pages/gamepage';
 import PurchaseHint from './pages/PurchaseHint';
 import PurchaseChecks from './pages/PurchaseChecks';
 import UserContext from './userlogged';
+import SuccessPage from './pages/SuccessPage';
+import SuccessPageChecks from './pages/SuccessPageChecks';
 
 
 function App() {
@@ -36,6 +37,8 @@ function App() {
                 <Route path='/store' element={<Store />} />
                 <Route path='/purchaseItem=hints' element={<PurchaseHint />} />
                 <Route path='/purchaseItem=checks' element={<PurchaseChecks />} />
+                <Route path='/hintsuccess=true' element={<SuccessPage />} />
+                <Route path='/checksuccess=true' element={<SuccessPageChecks />} />
               </Routes>
             </BrowserRouter>
           </div>

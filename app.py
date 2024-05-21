@@ -200,18 +200,10 @@ def login():
         return jsonify({'message': 'Error has occured.'}), 500
     
 
-
-
-@app.route('/purchaseItem=hints', methods=['GET', 'POST','OPTIONS'])
+@app.route('/purchaseItem=hints', methods=['POST'])
 @jwt_required()
 @cross_origin()
 def pay_for_hints():
-    if request.method == 'OPTIONS': # Wont work without this and the function doing the same above...
-        response = jsonify({'message': 'request successful'})
-        response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173')
-        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        return response
     hints = os.getenv('hints')
     try:
         checkout_session = stripe.checkout.Session.create(
@@ -223,32 +215,18 @@ def pay_for_hints():
                 },
             ],
             mode='payment',
-            success_url='http://localhost:5173/' + '?success=true',
-            cancel_url='http://localhost:5173/' + '?canceled=true',
+            success_url='http://localhost:5173/hintsuccess=true',
+            cancel_url='http://localhost:5173/hintcanceled=true',
         )
+    
     except Exception as e:
         return str(e)
-
-    if checkout_session:
-        current_user = get_jwt_identity()
-        user = User.query.filter_by(username=current_user).first()
-        user.owned_hints += 1
-        db.session.commit()
-        return redirect(checkout_session.url, code=303)
-
-    else:
-        return redirect(checkout_session.url, code=500)
+    return jsonify(checkout_url = checkout_session.url, id=checkout_session.id)
     
-@app.route('/purchaseItem=checks', methods=['GET', 'POST','OPTIONS'])
+@app.route('/purchaseItem=checks', methods=['POST'])
 @jwt_required()
 @cross_origin()
 def pay_for_checks():
-    if request.method == 'OPTIONS': # Wont work without this and the function doing the same above...
-        response = jsonify({'message': 'request successful'})
-        response.headers.set('Access-Control-Allow-Origin', 'http://localhost:5173')
-        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        return response
     checks = os.getenv('checks')
     try:
         checkout_session = stripe.checkout.Session.create(
@@ -260,21 +238,13 @@ def pay_for_checks():
                 },
             ],
             mode='payment',
-            success_url='http://localhost:5173/' + '?success=true',
-            cancel_url='http://localhost:5173/' + '?canceled=true',
+            success_url='http://localhost:5173/checksuccess=true',
+            cancel_url='http://localhost:5173/checkcanceled=true',
         )
+    
     except Exception as e:
         return str(e)
-
-    if checkout_session:
-        current_user = get_jwt_identity()
-        user = User.query.filter_by(username=current_user).first()
-        user.owned_checks += 1
-        db.session.commit()
-        return redirect(checkout_session.url, code=303)
-
-    else:
-        return redirect(checkout_session.url, code=500)
+    return jsonify(checkout_url = checkout_session.url, id=checkout_session.id)
     
 
 @app.route('/logout', methods=['POST', 'OPTIONS'])
@@ -320,6 +290,39 @@ def register():
             error = R_validation(username,password)
             return jsonify(error), 400
 
+@app.route('/hintsuccess=true', methods= ['POST'])
+@jwt_required()
+@cross_origin()
+def paid_hints():
+    id = request.json.get('id')
+    if id is None:
+        return jsonify({'error': 'No checkout id'}), 404
+    
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    user.owned_hints += 1
+    db.session.commit()
+    return jsonify({'message': 'Hints incremented successfully'}), 200
+
+@app.route('/checksuccess=true', methods= ['POST'])
+@jwt_required()
+@cross_origin()
+def paid_checks():
+    id = request.json.get('id')
+    if id is None:
+        return jsonify({'error': 'No checkout id'}), 404
+    
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    user.owned_checks += 1
+    db.session.commit()
+    return jsonify({'message': 'Hints incremented successfully'}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
