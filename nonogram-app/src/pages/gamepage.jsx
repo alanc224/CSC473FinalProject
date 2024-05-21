@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import Navbar from "./NavBar";
 import './gamepage.css';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
 import nonogramData from '../nonogram.json';
+import UserContext from '../userlogged';
 
 export default function GamePage() {
   const params = useParams()
-  // Access data from imported JSON
   const [nonograms, setNonograms] = useState(nonogramData['nonogram'][params.size])
   const [nonogramPuzzle, setNonogramPuzzle] = useState(nonograms[Math.floor(Math.random() * nonograms.length)])
   const [numRows] = useState(parseInt(params.size.split("x")[0]))
@@ -248,16 +248,16 @@ export default function GamePage() {
   let spacing;
   switch (params.size) {
     case "5x5":
-      spacing = "4.2rem";
+      spacing =[ "4.2rem", "104%"];
       break;
     case "10x10":
-      spacing = "4.3rem";
+      spacing = ["4.3rem", "102%"];
       break;
     case "15x15":
-      spacing = "4.45rem";
+      spacing = ["4.45rem", "101%"];
       break;
     case "20x20":
-      spacing = "4.3rem";
+      spacing = ["4.3rem", "101%"];
       break;
   }
   
@@ -265,7 +265,7 @@ export default function GamePage() {
     <>
       <Navbar/>
       <div className="gamepage" style={{ transform: `scale(${scale}%)` }}>
-        <div className="clues-cols" style={{ gap: spacing }}>
+        <div className="clues-cols" style={{ gap: spacing[0] }}>
           {/* Map over each column of the clues */}
           {cluesCols.map((column, colIndex) => (
             <div key={colIndex} className="clues-column">
@@ -281,9 +281,11 @@ export default function GamePage() {
           {/* Map over each row of the grid */}
           {board.map((row, rowIndex) => (
             <div key={rowIndex} className="grid-row">
-              {cluesRows[rowIndex].map((clue, clueIndex) => (
-                <span key={clueIndex}>{clue} </span>
-              ))}
+              <div className="clues-rows" style={{ right: spacing[1] }}>
+                {cluesRows[rowIndex].map((clue, clueIndex) => (
+                  <span key={clueIndex}>{clue} </span>
+                ))}
+              </div>
               {/* Map over each cell in the row */}
               {row.map((cell, colIndex) => (
                 <div key={colIndex} className={`grid-cell ${cell === '1' ? 'active' : ''} ${cell === 'w' ? 'wrong' : ''}`} onClick={() => boardUpdate(rowIndex, colIndex)}>{cell === 'x' ? 'x' : ''}</div>
