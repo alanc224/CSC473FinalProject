@@ -405,5 +405,66 @@ def update_checks():
             print(checks)
             return jsonify(checks)
 
+@app.route('/auth/login/github')
+def github_login():
+    print("IS THIS WORKING???")
+    client_id = os.getenv('GITHUB_CLIENT_ID')
+    redirect_uri = url_for('github_callback', _external=True)
+    github_auth_url = f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}"
+    return redirect(github_auth_url)
+
+@app.route('/auth/callback/github')
+def github_callback():
+    code = request.args.get('code')
+    if not code:
+        return jsonify({"msg": "Missing code"}), 400
+
+    client_id = os.getenv('GITHUB_CLIENT_ID')
+    client_secret = os.getenv('GITHUB_CLIENT_SECRET')
+
+    # Exchange code for access token
+    token_response = requests.post(
+        'https://github.com/login/oauth/access_token',
+        headers={'Accept': 'application/json'},
+        data={
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'code': code,
+            'redirect_uri': url_for('github_callback', _external=True),
+        }
+    )
+    token_json = token_response.json()
+    access_token = token_json.get('access_token')
+
+    if not access_token:
+        return jsonify({"msg": "Failed to fetch access token"}), 400
+
+    # Fetch user info with access token
+    user_response = requests.get(
+        'https://api.github.com/user',
+        headers={'Authorization': f'token {access_token}'}
+    )
+    user_info = user_response.json()
+    username = user_info.get('login')
+    email = user_info.get('email')
+
+    # Find or create user in the database
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        user = User(username=username, email=email)
+        db.session.add(user)
+        db.session.commit()
+
+    # Create JWT tokens
+    access_token = create_access_token(identity=email)
+    response = jsonify({
+        "msg": "Login successful",
+        "access_token": access_token,
+        "username": username
+    })
+    set_access_cookies(response, access_token)
+
+    return response
+
 if __name__ == "__main__":
     app.run(debug=True)

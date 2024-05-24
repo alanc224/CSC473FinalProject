@@ -59,6 +59,11 @@ export default function LoginPage(){
             });
         }
     }
+
+    const handleLoginWithGithub = () => {
+      window.location.href = 'http://localhost:5000/auth/login/github';
+
+    };
      
     return (
       <>
@@ -94,6 +99,7 @@ export default function LoginPage(){
                 <div>
                   <button type="button" onClick={logInUser}>Login</button>
                   <p>Don't have an account? <a href="/register">Register</a></p>
+                  <button onClick={handleLoginWithGithub}>Login with GitHub</button>
                 </div>
               </div>
 }
