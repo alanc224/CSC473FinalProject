@@ -108,6 +108,6 @@ You may play on the link above.
 
 ## Contact
 <b>Team Null<b>
-- Zuhayer Alvi
-- [Alan Concepcion](alancgc22@gmail.com)
-- Daphne Tang
+- [Zuhayer Alvi](https://github.com/azuhayer)
+- [Alan Concepcion](https://github.com/alanc224)
+- [Daphne Tang](https://github.com/DTang127)
