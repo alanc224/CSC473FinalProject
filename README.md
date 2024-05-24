@@ -94,7 +94,7 @@ You may play on the link above.
   - used React & javascript for frontend with many pages [here](https://github.com/alanc224/CSC473FinalProject/tree/main/nonogram-app/src/pages)
 - AUTHENTICATION:  Local Strategy (Session)	10%;  Third Party Strategy (Github, Google, Linkedin)	10%  
   - implemented local strategy (session) authentication (with JWT) [here](https://github.com/alanc224/CSC473FinalProject/blob/main/app.py)
-  - attempted third party strategy in different branch (unsuccessful unfortunately)
+  - attempted third party strategy in zuzu-auth branch (unsuccessful unfortunately)
 - DEPLOYMENT:  Cloud Providers (AWS, Azure, GCP), Heroku, Netlify, Vercel, etc	10%
   - deployed frontend using Vercel [here](https://griddle-csc-473-final-project.vercel.app/)
 - TESTING:  API; Unit, Integration (>=5 Test)	5%;  Client; Unit, Integration (>=5 Test)	5%
