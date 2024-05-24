@@ -109,5 +109,5 @@ You may play on the link above.
 ## Contact
 <b>Team Null<b>
 - [Zuhayer Alvi](https://github.com/azuhayer)
-- [Alan Concepcion](https://github.com/alanc224)
+- [Alan Concepcion](mailto:alancgc22@gmail.com)
 - [Daphne Tang](https://github.com/DTang127)
