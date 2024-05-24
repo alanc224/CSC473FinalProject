@@ -109,5 +109,5 @@ You may play on the link above.
 ## Contact
 <b>Team Null<b>
 - Zuhayer Alvi
-- Alan Concepcion
+- [Alan Concepcion](alancgc22@gmail.com)
 - Daphne Tang
